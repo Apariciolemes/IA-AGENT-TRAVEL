@@ -32,7 +32,7 @@ class LLMClient:
             from openai import AsyncOpenAI
             # Ollama usa API compatível com OpenAI
             self.client = AsyncOpenAI(
-                base_url=settings.OLLAMA_BASE_URL,
+                base_url=f"{settings.OLLAMA_BASE_URL}/v1",
                 api_key="ollama"  # Ollama não precisa de key real
             )
         else:

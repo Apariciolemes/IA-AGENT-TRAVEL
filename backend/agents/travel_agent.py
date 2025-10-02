@@ -69,7 +69,7 @@ class TravelAgent:
             # Get LLM response with function calling
             llm_response = await self.llm_client.chat_completion(
                 messages=messages,
-                tools=self.tools.get_tool_definitions()
+                tools=self.tools.get_tool_definitions() if self.llm_client.provider != "ollama" else None
             )
 
             # Check if LLM wants to call a function
