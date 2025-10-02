@@ -28,6 +28,13 @@ class LLMClient:
                 api_key=settings.OPENAI_API_KEY,
                 azure_endpoint=settings.AZURE_OPENAI_ENDPOINT
             )
+        elif self.provider == "ollama":
+            from openai import AsyncOpenAI
+            # Ollama usa API compatível com OpenAI
+            self.client = AsyncOpenAI(
+                base_url=settings.OLLAMA_BASE_URL,
+                api_key="ollama"  # Ollama não precisa de key real
+            )
         else:
             raise ValueError(f"Unsupported LLM provider: {self.provider}")
 
@@ -52,7 +59,7 @@ class LLMClient:
             }
         """
         try:
-            if self.provider == "openai" or self.provider == "azure":
+            if self.provider in ["openai", "azure", "ollama"]:
                 return await self._openai_completion(messages, tools, temperature)
             elif self.provider == "anthropic":
                 return await self._anthropic_completion(messages, tools, temperature)

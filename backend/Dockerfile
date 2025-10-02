@@ -35,9 +35,9 @@ COPY requirements.txt .
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Install Playwright browsers
-RUN playwright install chromium
-RUN playwright install-deps chromium
+# Install Playwright browsers (optional for MVP - scraping is stubbed)
+# RUN playwright install chromium
+# RUN playwright install-deps chromium
 
 # Copy application code
 COPY . .

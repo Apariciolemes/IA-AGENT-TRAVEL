@@ -16,11 +16,12 @@ class Settings(BaseSettings):
     REDIS_PASSWORD: str | None = None
 
     # LLM
-    LLM_PROVIDER: Literal["openai", "anthropic", "azure"] = "openai"
-    LLM_MODEL: str = "gpt-4-turbo-preview"
+    LLM_PROVIDER: Literal["openai", "anthropic", "azure", "ollama"] = "ollama"
+    LLM_MODEL: str = "llama2"
     OPENAI_API_KEY: str = ""
     ANTHROPIC_API_KEY: str = ""
     AZURE_OPENAI_ENDPOINT: str = ""
+    OLLAMA_BASE_URL: str = "http://ollama:11434"
 
     # Pricing Engine
     R_PER_MILE: float = 0.03

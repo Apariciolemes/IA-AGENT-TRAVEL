@@ -109,8 +109,21 @@ services:
       - /app/.nuxt
     depends_on:
       - backend
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
     command: npm run dev
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: travel_ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    restart: unless-stopped
 
 volumes:
   postgres_data:
   redis_data:
+  ollama_data:
