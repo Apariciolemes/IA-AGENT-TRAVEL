@@ -64,10 +64,10 @@
                 <div
                   :class="[
                     'px-2 py-1 rounded text-xs font-medium',
-                    offer.type === 'cash' ? 'bg-green-100 text-green-800' : 'bg-purple-100 text-purple-800'
+                    offer.offer_type === 'cash' ? 'bg-green-100 text-green-800' : 'bg-purple-100 text-purple-800'
                   ]"
                 >
-                  {{ offer.type === 'cash' ? 'Dinheiro' : 'Milhas' }}
+                  {{ offer.offer_type === 'cash' ? 'Dinheiro' : 'Milhas' }}
                 </div>
               </div>
 
@@ -75,7 +75,7 @@
               <div class="space-y-2 mb-3">
                 <div v-for="(segment, idx) in offer.segments" :key="idx" class="flex items-center gap-4">
                   <div class="font-semibold">
-                    {{ segment.from }} → {{ segment.to }}
+                    {{ segment.origin }} → {{ segment.destination }}
                   </div>
                   <div class="text-sm text-gray-600">
                     {{ segment.carrier }}{{ segment.flight_number }}
@@ -88,31 +88,31 @@
 
               <!-- Details -->
               <div class="flex gap-4 text-sm text-gray-600">
-                <span>⏱️ {{ formatDuration(offer.duration_minutes) }}</span>
-                <span>{{ offer.stops === 0 ? '✈️ Direto' : `🔄 ${offer.stops} escala(s)` }}</span>
+                <span>⏱️ {{ formatDuration(offer.total_duration_minutes) }}</span>
+                <span>{{ offer.stops_count === 0 ? '✈️ Direto' : `🔄 ${offer.stops_count} escala(s)` }}</span>
                 <span>{{ offer.baggage_included ? '🧳 Bagagem incluída' : '🚫 Bagagem não incluída' }}</span>
               </div>
 
               <!-- Explanation -->
-              <div v-if="offer.explanation" class="mt-3 text-sm text-gray-500 italic">
-                {{ offer.explanation }}
+              <div v-if="offer.score_explanation" class="mt-3 text-sm text-gray-500 italic">
+                {{ offer.score_explanation }}
               </div>
             </div>
 
             <!-- Price -->
             <div class="text-right ml-6">
-              <div v-if="offer.type === 'cash'" class="text-3xl font-bold text-primary-600">
-                R$ {{ offer.price.cash.amount.toFixed(2) }}
+              <div v-if="offer.offer_type === 'cash'" class="text-3xl font-bold text-primary-600">
+                R$ {{ (offer.cash.amount_cents / 100).toFixed(2) }}
               </div>
               <div v-else>
                 <div class="text-3xl font-bold text-purple-600">
-                  {{ offer.price.miles.points.toLocaleString() }}
+                  {{ offer.miles.points.toLocaleString() }}
                 </div>
                 <div class="text-sm text-gray-600">
-                  milhas + R$ {{ offer.price.miles.taxes.toFixed(2) }}
+                  milhas + R$ {{ (offer.miles.taxes_cents / 100).toFixed(2) }}
                 </div>
                 <div class="text-xs text-gray-500 mt-1">
-                  {{ offer.price.miles.program }}
+                  {{ offer.miles.program }}
                 </div>
               </div>
 
@@ -175,8 +175,7 @@ const searchOffers = async () => {
         out_date: searchParams.value.outDate,
         ret_date: searchParams.value.retDate,
         pax: { adults: 1 },
-        cabin: 'ECONOMY',
-        bag_included: true
+        cabin: 'ECONOMY'
       }
     })
 
@@ -192,13 +191,13 @@ const filteredOffers = computed(() => {
   let filtered = offers.value
 
   if (filters.value.cashOnly) {
-    filtered = filtered.filter(o => o.type === 'cash')
+    filtered = filtered.filter(o => o.offer_type === 'cash')
   }
   if (filters.value.milesOnly) {
-    filtered = filtered.filter(o => o.type === 'miles')
+    filtered = filtered.filter(o => o.offer_type === 'miles')
   }
   if (filters.value.directOnly) {
-    filtered = filtered.filter(o => o.stops === 0)
+    filtered = filtered.filter(o => o.stops_count === 0)
   }
 
   return filtered
